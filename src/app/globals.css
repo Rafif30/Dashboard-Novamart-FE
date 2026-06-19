@@ -1,0 +1,334 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/forms";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /*
+   |--------------------------------------------------------------------------
+   | Animations
+   |--------------------------------------------------------------------------
+   */
+
+  --animate-hide: hide 150ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-slide-down-and-fade: slideDownAndFade 150ms
+    cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-slide-left-and-fade: slideLeftAndFade 150ms
+    cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-slide-up-and-fade: slideUpAndFade 150ms
+    cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-slide-right-and-fade: slideRightAndFade 150ms
+    cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-accordion-open: accordionOpen 150ms
+    cubic-bezier(0.87, 0, 0.13, 1);
+
+  --animate-accordion-close: accordionClose 150ms
+    cubic-bezier(0.87, 0, 0.13, 1);
+
+  --animate-dialog-overlay-show: dialogOverlayShow 150ms
+    cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-dialog-content-show: dialogContentShow 150ms
+    cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-drawer-slide-left-and-fade: drawerSlideLeftAndFade
+    150ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-drawer-slide-right-and-fade: drawerSlideRightAndFade
+    150ms ease-in;
+
+  /*
+   |--------------------------------------------------------------------------
+   | Chart Colors
+   |--------------------------------------------------------------------------
+   */
+
+  --chart-blue: oklch(62.3% 0.214 259.815);
+  --chart-emerald: oklch(69.6% 0.17 162.48);
+  --chart-violet: oklch(60.6% 0.25 292.717);
+  --chart-amber: oklch(76.9% 0.188 70.08);
+  --chart-gray: oklch(55.1% 0.027 264.364);
+  --chart-cyan: oklch(71.5% 0.143 215.221);
+  --chart-pink: oklch(65.6% 0.241 354.308);
+  --chart-lime: oklch(76.8% 0.233 130.85);
+  --chart-fuchsia: oklch(66.7% 0.295 322.15);
+  --chart-yellow: oklch(85.2% 0.199 91.936);
+  --chart-red: oklch(63.7% 0.237 25.331);
+
+  /*
+|--------------------------------------------------------------------------
+| Chart Foreground Colors
+|--------------------------------------------------------------------------
+*/
+
+  --chart-blue-foreground: #ffffff;
+  --chart-emerald-foreground: #052e16;
+  --chart-violet-foreground: #ffffff;
+  --chart-amber-foreground: #451a03;
+  --chart-gray-foreground: #ffffff;
+  --chart-cyan-foreground: #083344;
+  --chart-pink-foreground: #ffffff;
+  --chart-lime-foreground: #1a2e05;
+  --chart-fuchsia-foreground: #ffffff;
+  --chart-yellow-foreground: #422006;
+  --chart-red-foreground: #ffffff;
+
+  /*
+   |--------------------------------------------------------------------------
+   | Keyframes
+   |--------------------------------------------------------------------------
+   */
+
+  @keyframes hide {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes slideDownAndFade {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideLeftAndFade {
+    from {
+      opacity: 0;
+      transform: translateX(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideUpAndFade {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideRightAndFade {
+    from {
+      opacity: 0;
+      transform: translateX(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes accordionOpen {
+    from {
+      height: 0px;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+
+  @keyframes accordionClose {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0px;
+    }
+  }
+
+  @keyframes dialogOverlayShow {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes dialogContentShow {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -45%) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
+  @keyframes drawerSlideLeftAndFade {
+    from {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes drawerSlideRightAndFade {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+  }
+}
+
+/*
+|--------------------------------------------------------------------------
+| LIGHT THEME (DEFAULT)
+|--------------------------------------------------------------------------
+*/
+
+:root {
+  color-scheme: light;
+
+  --background: #f8f9fb;
+  --foreground: #0f172a;
+
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+
+  --sidebar: #f3f4f6;
+  --sidebar-foreground: #1e293b;
+
+  --muted: #64748b;
+  --muted-foreground: #94a3b8;
+
+  --border: rgba(15, 23, 42, 0.12);
+  --input: rgba(15, 23, 42, 0.1);
+
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+
+  --secondary: #e2e8f0;
+  --secondary-foreground: #1e293b;
+
+  --accent: #dbeafe;
+  --accent-foreground: #1e40af;
+
+  --success: #16a34a;
+  --warning: #ea580c;
+  --danger: #e11d48;
+
+  --ring: rgba(37, 99, 235, 0.5);
+
+  --table-hover: rgba(15, 23, 42, 0.05);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/*
+|--------------------------------------------------------------------------
+| DARK THEME
+|--------------------------------------------------------------------------
+*/
+
+.dark {
+  color-scheme: dark;
+
+  --background: #0f172a;
+  --foreground: #f1f5f9;
+
+  --card: #1e293b;
+  --card-foreground: #f1f5f9;
+
+  --popover: #1e293b;
+  --popover-foreground: #f1f5f9;
+
+  --sidebar: #0f172a;
+  --sidebar-foreground: #f1f5f9;
+
+  --muted: #64748b;
+  --muted-foreground: #94a3b8;
+
+  --border: rgba(241, 245, 249, 0.15);
+  --input: rgba(241, 245, 249, 0.12);
+
+  --primary: #60a5fa;
+  --primary-foreground: #0f172a;
+
+  --secondary: #334155;
+  --secondary-foreground: #f1f5f9;
+
+  --accent: #1e3a8a;
+  --accent-foreground: #93c5fd;
+
+  --success: #4ade80;
+  --warning: #fb923c;
+  --danger: #f87171;
+
+  --ring: rgba(96, 165, 250, 0.5);
+
+  --table-hover: rgba(241, 245, 249, 0.08);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Base Styles
+|--------------------------------------------------------------------------
+*/
+
+html,
+body {
+  min-height: 100%;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+body {
+  font-feature-settings:
+    "rlig" 1,
+    "calt" 1;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Scrollbar
+|--------------------------------------------------------------------------
+*/
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--muted-foreground);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
