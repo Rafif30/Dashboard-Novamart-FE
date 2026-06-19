@@ -27,6 +27,6 @@ export async function logout(): Promise<void> {
 
 // URL redirect ke backend untuk mulai flow Google OAuth
 export function getGoogleLoginUrl(): string {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api';
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   return `${apiUrl}/auth/google`;
 }
