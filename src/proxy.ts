@@ -9,7 +9,8 @@ export function proxy(
   request: NextRequest
 ) {
   const sessionCookie =
-    request.cookies.get("access_token");
+    request.cookies.get("refresh_token");
+  
   const isAuthenticated = !!sessionCookie;
 
   const pathname =

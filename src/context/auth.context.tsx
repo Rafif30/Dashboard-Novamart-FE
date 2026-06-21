@@ -9,6 +9,7 @@ import React, {
   useRef,
 } from 'react';
 import { AuthState } from '@/services/auth/auth.types';
+import { tokenStore } from '@/services/api-client';
 import { fetchMe, getToken, logout as logoutApi, refreshToken } from '@/services/auth/auth.api';
 
 // ============================================================
@@ -54,7 +55,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch {
       // Lanjutkan logout meski request gagal
     } finally {
-      cookieStore.delete('access_token')
+      tokenStore.clear();
       setState({ user: null, accessToken: null, isLoading: false, isAuthenticated: false });
     }
   }, []);
@@ -66,7 +67,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const token = await getToken(code)
       setState((prev) => ({ ...prev, accessToken: token.access_token }));
-      cookieStore.set('access_token', token.access_token)
+      tokenStore.set(token.access_token)
       return token.access_token
     } catch (err) {
       console.error(err)
@@ -88,7 +89,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     refreshTimerRef.current = setTimeout(async () => {
       try {
         const { access_token } = await refreshToken();
-        cookieStore.set('access_token', access_token)
+        tokenStore.set(access_token);
         setState((prev) => ({ ...prev, accessToken: access_token }));
         // eslint-disable-next-line react-hooks/immutability
         scheduleRefresh(); // jadwalkan refresh berikutnya
@@ -116,7 +117,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       scheduleRefresh();
     } catch {
-      cookieStore.delete('access_token')
+      tokenStore.clear();
       setState({ user: null, accessToken: null, isLoading: false, isAuthenticated: false });
     }
   }, [scheduleRefresh]);
@@ -142,7 +143,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (cancelled) return;
 
-      cookieStore.set('access_token', access_token)
+      tokenStore.set(access_token);
 
       const user = await fetchMe();
 
