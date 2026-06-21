@@ -5,17 +5,9 @@ const apiClient: AxiosInstance = axios.create({
   withCredentials: true,
 });
 
-let _accessToken: string | null = null;
-
-export const tokenStore = {
-  get: () => _accessToken,
-  set: (token: string | null) => { _accessToken = token; },
-  clear: () => { _accessToken = null; },
-};
-
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = tokenStore.get();
+    const token = cookieStore.get('access_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -76,7 +68,7 @@ apiClient.interceptors.response.use(
         throw new Error('No access token in refresh response');
       }
 
-      tokenStore.set(data.access_token);
+      cookieStore.set('access_token', data.access_token)
       processPendingQueue(null, data.access_token);
 
       originalRequest.headers.Authorization = `Bearer ${data.access_token}`;
