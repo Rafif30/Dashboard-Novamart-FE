@@ -11,7 +11,7 @@ import React, {
 import { AuthState } from '@/services/auth/auth.types';
 import axios from 'axios';
 import { tokenStore } from '@/services/api-client';
-import { fetchMe, logout as logoutApi } from '@/services/auth/auth.api';
+import { fetchMe } from '@/services/auth/auth.api';
 
 // ============================================================
 // AUTH CONTEXT
@@ -51,7 +51,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current);
 
     try {
-      await logoutApi(); // hapus cookie di backend
+      axios.get('/api/auth/logout');
     } catch {
       // Lanjutkan logout meski request gagal
     } finally {
