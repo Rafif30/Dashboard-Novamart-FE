@@ -9,8 +9,9 @@ import React, {
   useRef,
 } from 'react';
 import { AuthState } from '@/services/auth/auth.types';
+import axios from 'axios';
 import { tokenStore } from '@/services/api-client';
-import { fetchMe, getToken, logout as logoutApi, refreshToken } from '@/services/auth/auth.api';
+import { fetchMe, logout as logoutApi } from '@/services/auth/auth.api';
 
 // ============================================================
 // AUTH CONTEXT
@@ -25,7 +26,6 @@ import { fetchMe, getToken, logout as logoutApi, refreshToken } from '@/services
 
 interface AuthContextValue extends AuthState {
   setTokenAndFetchUser: (token: string) => Promise<void>;
-  generateToken: (code: string) => Promise<string>;
   logout: () => Promise<void>;
 }
 
@@ -61,22 +61,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   // ─────────────────────────────────────────────
-  // Generate Token
-  // ─────────────────────────────────────────────
-  const generateToken = useCallback(async (code: string): Promise<string> => {
-    try {
-      const token = await getToken(code)
-      setState((prev) => ({ ...prev, accessToken: token.access_token }));
-      tokenStore.set(token.access_token)
-      return token.access_token
-    } catch (err) {
-      console.error(err)
-      handleLogout()
-      throw err
-    }
-  }, [handleLogout])
-
-  // ─────────────────────────────────────────────
   // SETUP AUTO REFRESH TIMER
   // Dipanggil setiap kali token baru di-set.
   // Akan refresh token ~1 menit sebelum expired.
@@ -88,9 +72,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     refreshTimerRef.current = setTimeout(async () => {
       try {
-        const { access_token } = await refreshToken();
-        tokenStore.set(access_token);
-        setState((prev) => ({ ...prev, accessToken: access_token }));
+        const response = await axios.post('/api/auth/refresh');        
+        tokenStore.set(response.data.access_token);
+        setState((prev) => ({ ...prev, accessToken: response.data.access_token }));
         // eslint-disable-next-line react-hooks/immutability
         scheduleRefresh(); // jadwalkan refresh berikutnya
       } catch {
@@ -108,6 +92,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const setTokenAndFetchUser = useCallback(async (token: string) => {
 
     try {
+      tokenStore.set(token)
       const user = await fetchMe();
       setState({
         user,
@@ -138,12 +123,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   async function silentRefresh() {
     try {
-      const { access_token } =
-        await refreshToken();
+      const response =
+        await axios.post('/api/auth/refresh');
 
       if (cancelled) return;
 
-      tokenStore.set(access_token);
+      tokenStore.set(response.data.access_token);
 
       const user = await fetchMe();
 
@@ -151,7 +136,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       setState({
         user,
-        accessToken: access_token,
+        accessToken: response.data.access_token,
         isLoading: false,
         isAuthenticated: true,
       });
@@ -182,7 +167,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ ...state, setTokenAndFetchUser, logout: handleLogout, generateToken }}
+      value={{ ...state, setTokenAndFetchUser, logout: handleLogout }}
     >
       {children}
     </AuthContext.Provider>

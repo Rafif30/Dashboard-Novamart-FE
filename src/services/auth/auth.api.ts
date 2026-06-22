@@ -8,18 +8,6 @@ export async function fetchMe(): Promise<AuthUser> {
   return response.data;
 }
 
-// Ambil Token dari exchange code
-export async function getToken(code: string): Promise<{ access_token: string; expires_in: number }> {
-  const { data: response } = await apiClient.post<ApiResponse<{ access_token: string; expires_in: number }>>('auth/token', { code })
-  return response.data
-} 
-
-// Refresh access token (POST /auth/refresh)
-export async function refreshToken(): Promise<{ access_token: string; expires_in: number }> {
-  const { data: response } = await apiClient.post<ApiResponse<{ access_token: string; expires_in: number }>>('/auth/refresh');
-  return response.data;
-}
-
 // Logout (POST /auth/logout)
 export async function logout(): Promise<void> {
   await apiClient.post('/auth/logout');

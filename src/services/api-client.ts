@@ -68,18 +68,16 @@ apiClient.interceptors.response.use(
     isRefreshing = true;
 
     try {
-      const { data } = await apiClient.post<{ access_token: string }>(
-        '/auth/refresh',
-      );
+      const response  = await axios.post('/api/auth/refresh');
 
-      if (!data.access_token) {
+      if (!response.data.access_token) {
         throw new Error('No access token in refresh response');
       }
 
-      tokenStore.set(data.access_token);
-      processPendingQueue(null, data.access_token);
+      tokenStore.set(response.data.access_token);
+      processPendingQueue(null, response.data.access_token);
 
-      originalRequest.headers.Authorization = `Bearer ${data.access_token}`;
+      originalRequest.headers.Authorization = `Bearer ${response.data.access_token}`;
       return apiClient(originalRequest);
     } catch (refreshError) {
       console.error('Token refresh failed:', refreshError);

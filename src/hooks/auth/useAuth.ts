@@ -14,10 +14,10 @@ import { Role } from '@/services/auth/auth.types';
 //   const { user, isAuthenticated, logout } = useAuth();
 // ============================================================
 export function useAuth() {
-  const { user, accessToken, isLoading, isAuthenticated, logout, setTokenAndFetchUser, generateToken } =
+  const { user, accessToken, isLoading, isAuthenticated, logout, setTokenAndFetchUser } =
     useAuthContext();
 
-  return { user, accessToken, isLoading, isAuthenticated, logout, setTokenAndFetchUser, generateToken };
+  return { user, accessToken, isLoading, isAuthenticated, logout, setTokenAndFetchUser };
 }
 
 // ============================================================

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import axios from 'axios';
 import { useAuth } from '@/hooks/auth/useAuth';
 
 // ============================================================
@@ -20,7 +21,7 @@ import { useAuth } from '@/hooks/auth/useAuth';
 export default function AuthCallbackPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { setTokenAndFetchUser, generateToken } = useAuth();
+  const { setTokenAndFetchUser } = useAuth();
   const handled = useRef(false); // cegah double-call di React StrictMode
 
   useEffect(() => {
@@ -35,17 +36,22 @@ export default function AuthCallbackPage() {
       return;
     }
 
-    generateToken(code).then(
-      (token) => setTokenAndFetchUser(token)
-        .then(() => {
-          router.replace('/overview');
-        })
-        .catch(() => {
-          router.replace('/login?error=auth_failed');
-        })
-    )
+    const fetchToken = async function() {
+      const response = await axios.post('/api/auth/login', {code})
 
-  }, [searchParams, router, setTokenAndFetchUser, generateToken]);
+      if (response.status === 200) {
+        console.log(response.data)
+        await setTokenAndFetchUser(response.data.token).then(
+          () => router.replace('/overview')
+        ).catch(
+          () => router.replace('/login?error=auth_failed')
+        )
+      }
+    }
+
+    fetchToken()
+
+  }, [searchParams, router, setTokenAndFetchUser]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background">
